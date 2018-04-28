@@ -1,0 +1,48 @@
+// 图形管道伪代码
+// 首先, 设置观察场景的方式
+setupTheCamera();
+// 清除 z-buffer
+clearZbuffer();
+// 设置环境光源和雾化
+setGlobalLightingAngFog();
+// 得到可见物体列表
+potentiallyVisibleObjectList = highLevelVisibilityDetermination(scene);
+// 渲染它们
+for (all objects in potentiallyVisibleObjectList) {
+	// 使用包围体方法执行低级别 VSD 检测
+	if (!object.isBoundingVolumeVisible()) {
+		continue;
+	}
+	// 提取或者渐进式生成几何体
+	triMesh = object.getGeometry();
+	// 裁剪和渲染面
+	for (each triangle in the geometry) {
+		// 变换顶点到裁剪空间, 执行顶点级别光照
+		clipSpaceTriangle = transformAndLighting(triangle);
+		// 三角形为背向的?
+		if (clipSpaceTriangle.isBackFacing()) {
+			continue;
+		}
+		// 对视锥裁剪三角形
+		clippedTriangle = clipToViewVolume(cliSpaceTriangle);
+		if (clippedTriangle.isEmpty()) {
+			continue;
+		}
+		// 三角形投影至屏幕空间, 并且光栅化
+		clippedTriangle.projectToScreenSpace();
+		for (each pixel in the triangle) {
+			// 插值颜色, z-缓冲值和纹理映射坐标
+			// 执行 zbuffering 和 alpha 检测
+			if (!zbufferTest()) {
+				continue;
+			}
+			if (!alphaTest()) {
+				continue;
+			}
+			// 像素着色
+			color = shadePixel();
+			// 写内容到帧缓冲和z-缓冲
+			writePixel(color, interpolatedZ);
+		}
+	}
+}
