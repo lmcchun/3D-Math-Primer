@@ -1,0 +1,9 @@
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs/3D-Math-Primer/v14
+/Debug
+/3D-Math-Primer.VC.db
+/3D-Math-Primer.VC.VC.opendb
+/3D-Math-Primer.vcxproj.filters
